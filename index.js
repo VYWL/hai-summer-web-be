@@ -58,24 +58,12 @@ app.post("/ocr", upload.single("image"), async (req, res) => {
     });
 });
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-const dummy = `제목: GDSC Hanyang의 회합 일정과 형식
-요약 결과:
-1. GDSC Hanyang은 회합일을 월요일 저녁으로 고정하고 매주 진행한다.
-2. 회합은 3개의 기간으로 나뉘며, 첫주는 23.09~23.10, 둘째주는 23.11~23.12이다.
-3. 온라인과 오프라인을 격주로 섞을 수 있지만, 아직 확정되지 않았다.`;
-
 app.post("/summary", async (req, res) => {
-    if (!req.text) {
+    if (!req.body.text) {
         return res.status(400).send({ error: "Text is required" });
     }
 
-    await sleep(2500);
-
-    const ret = dummy; // await getSummarizedText(req.text);
+    const ret = await getSummarizedText(req.body.text);
 
     if (!ret) {
         return res.status(400).send({ error: "Error!" });
@@ -86,7 +74,8 @@ app.post("/summary", async (req, res) => {
 
     addRequestToJson("./result.json", {
         type: "GPT",
-        data: ret,
+        input: req.body.text,
+        result: ret,
     });
 });
 

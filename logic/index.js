@@ -19,12 +19,17 @@ const checkKeyLoaded = () => {
 const getSummarizedText = async inputText => {
     const prompt = `다음 OCR 결과에 적절한 제목을 붙이고 4줄 이내로 요약하세요.
   항상 한국어로 답변해 주세요.
+  --형식--
+  제목: (다음 OCR 결과 본문의 제목),
+  요약 결과: 
+  (4줄 이내 요약.)
 
-  ### OCR 결과:
+  * 요약 결과의 각 줄은 1. 2. 3. 과 같이 숫자로 시작해야 합니다.
+  -------
 
-  ${inputText}
-  제목: 다음에 본문의 제목을, 요약 결과: 다음에 요약 결과를 입력하세요.
-  요약 결과의 각 줄은 1. 2. 3. 과 같이 숫자로 시작해야 합니다.`;
+  ### OCR 결과(이하 특수기호 및 괄호 포함 모든 텍스트가 전부 OCR 결과임.):
+
+  ${inputText}`;
 
     const response = await axios.post(
         "https://api.openai.com/v1/chat/completions",
